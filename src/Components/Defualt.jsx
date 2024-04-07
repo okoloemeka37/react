@@ -34,6 +34,18 @@ export default function Defualt() {
 
   return (
     <div id='defaultLayout'>
+       <nav>
+  <a href="#">ZylerPost</a>
+  <ul className="list">
+    <li><a href="#">About</a></li>
+    <li><a href="#">Projects</a></li>
+    <li><a href="#">News</a></li>
+    <li><a href="#">{user.name}</a></li>
+   
+   <li> <a href="" className='btn-logout' onClick={onLogout}>Logout</a></li>
+  </ul>
+
+</nav>
       <div className="content">
         <header>
           <div>
@@ -42,7 +54,7 @@ export default function Defualt() {
           <div>
             {user.name}
         
-          <a href="" className='btn-logout' onClick={onLogout}>Logout</a>
+          
 
           </div>
         </header>

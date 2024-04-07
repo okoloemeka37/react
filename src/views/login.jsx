@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import axiosClient from '../axios';
 import { useRef } from 'react';
@@ -10,40 +10,59 @@ export default function login() {
   const passwordRef=useRef()
 
   const{setUser,setToken}=useStateContext()
+  const[error,setError]=useState();
+  const [loading, setloading] = useState(false)
 
+  
 
   const submit=(e)=>{
 e.preventDefault();
+setloading(true);
+
 const payload={
   email:emailRef.current.value,
   password:passwordRef.current.value
 }
 
+
 axiosClient.post("/login",payload).then(({data})=>{
 setUser(data.user);
 setToken(data.token)
+if (data.message=="wrong credentials") {
+  setError(data.message)
+}
+
 
 }).catch(err=>{
-  if (err.status===422) {
-    console.log(err.data.errors)
+
+  if (err.response.status===422) {
+    console.log(err.response.data)
+setError(err.response.data.message)
+setloading(false)
   }
 })
 
-console.log(payload)
+
   }
   return (
-    <div className='login-signup-form animated fadeinDown'>
-        <div className="form">
-          <h1 className="title">Login To Your Account</h1>
-          <form onSubmit={submit}>
-          <input type="email" ref={emailRef} name="" placeholder='Email' id="" />
-        <input type="password" ref={passwordRef} name=""placeholder='Password' id="" />
-      
-      <button className='btn btn-black'>Login</button>
-      <p className="message">Don't Have An Account? <Link to='/register'>Create One</Link></p>
-          </form>
-        </div>
-    </div>
+  
+
+<div className="container">
+  
+  <div className="brand-title">LOGIN TO YOUR ACCOUNT</div>
+  <p className="err">{error}</p>
+  <div className="inputs">
+    <form action="" onSubmit={submit}>
+    <label>EMAIL</label>
+    <input ref={emailRef} type="email" placeholder="Email" />
+    <label>PASSWORD</label>
+    <input ref={passwordRef} type="password" placeholder="Password" />
+    {loading &&(<p className='sp'><span className="loader"></span></p>)}
+   <button type="submit">LOGIN</button>
+    </form>
+  </div>
+
+</div>
   )
 }
  
